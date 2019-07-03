@@ -89,6 +89,7 @@ export function normalizeValidateRules(validate, rules, validateTrigger) {
     }
     return newItem;
   });
+  // TODO 看到此处
   if (rules) {
     validateRules.push({
       trigger: validateTrigger ? [].concat(validateTrigger) : [],

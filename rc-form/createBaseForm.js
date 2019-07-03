@@ -230,8 +230,9 @@ function createBaseForm(option = {}, mixins = []) {
           validateTrigger = trigger,
           validate,
         } = fieldOption;
-
+        console.log(111, fieldOption);
         const fieldMeta = this.fieldsStore.getFieldMeta(name);
+        console.log(222, fieldMeta);
         if ('initialValue' in fieldOption) {
           fieldMeta.initialValue = fieldOption.initialValue;
         }
@@ -243,6 +244,8 @@ function createBaseForm(option = {}, mixins = []) {
         if (fieldNameProp) {
           inputProps[fieldNameProp] = formName ? `${formName}_${name}` : name;
         }
+
+        console.log(333, inputProps);
 
         // 这里开始处理表单验证的逻辑
         const validateRules = normalizeValidateRules(validate, rules, validateTrigger);
@@ -334,6 +337,9 @@ function createBaseForm(option = {}, mixins = []) {
         }
       },
 
+      // 这个函数到底是干嘛的。。。
+      // component存在的时候干一些事儿
+      // component不存在的时候干一些事儿。。。
       saveRef(name, _, component) {
         if (!component) {
           const fieldMeta = this.fieldsStore.getFieldMeta(name);
