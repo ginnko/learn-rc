@@ -344,6 +344,7 @@ function createBaseForm(option = {}, mixins = []) {
       // 这个函数到底是干嘛的。。。
       // component存在的时候干一些事儿
       // component不存在的时候干一些事儿。。。
+      // TODO该看这个函数了
       saveRef(name, _, component) {
         if (!component) {
           const fieldMeta = this.fieldsStore.getFieldMeta(name);
