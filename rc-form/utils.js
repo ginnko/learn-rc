@@ -81,6 +81,7 @@ export function flattenFields(maybeNestedFields, isLeafNode, errorMessage) {
 export function normalizeValidateRules(validate, rules, validateTrigger) {
   const validateRules = validate.map((item) => {
     const newItem = {
+      // 这里的item也是rules类型的
       ...item,
       trigger: item.trigger || [],
     };

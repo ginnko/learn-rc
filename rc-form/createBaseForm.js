@@ -199,6 +199,7 @@ function createBaseForm(option = {}, mixins = []) {
         };
       },
 
+      // 这个函数将对应的字段的实时数据和元数据以属性的形式注入给标签
       getFieldProps(name, usersFieldOption = {}) {
         if (!name) {
           throw new Error('Must call `getFieldProps` with valid name string!');
@@ -223,16 +224,13 @@ function createBaseForm(option = {}, mixins = []) {
           validate: [],
           ...usersFieldOption,
         };
-        // TODO 看到此处。。。。啦啦啦啦
         const {
           rules,
           trigger,
           validateTrigger = trigger,
           validate,
         } = fieldOption;
-        console.log(111, fieldOption);
         const fieldMeta = this.fieldsStore.getFieldMeta(name);
-        console.log(222, fieldMeta);
         if ('initialValue' in fieldOption) {
           fieldMeta.initialValue = fieldOption.initialValue;
         }
@@ -259,6 +257,12 @@ function createBaseForm(option = {}, mixins = []) {
         if (trigger && validateTriggers.indexOf(trigger) === -1) {
           inputProps[trigger] = this.getCacheBind(name, trigger, this.onCollect);
         }
+
+        // 到此处this.getCacheBind函数调用了三次
+        // 绑定了三个函数
+        // 有待看它们具体是干嘛的
+        // 第一个没看明白
+
 
         const meta = {
           ...fieldMeta,
