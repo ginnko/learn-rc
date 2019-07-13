@@ -17,6 +17,8 @@ export function identity(obj) {
 }
 
 export function flattenArray(arr) {
+  // 使用Array.prototype.concat.apply([], arr)
+  // 能够实现展平arr中的一层嵌套数组
   return Array.prototype.concat.apply([], arr);
 }
 

@@ -134,6 +134,9 @@ function createBaseForm(option = {}, mixins = []) {
         });
       },
 
+      // 在这个函数里给field添加了touch:true属性
+      // 更新了value属性
+      // 添加了dirty属性
       onCollectValidate(name_, action, ...args) {
         const { field, fieldMeta } = this.onCollectCommon(name_, action, args);
         const newField = {
@@ -141,6 +144,7 @@ function createBaseForm(option = {}, mixins = []) {
           dirty: true,
         };
 
+        // 此处是给所有已存在的（？）字段dirty值都设为true
         this.fieldsStore.setFieldsAsDirty();
 
         this.validateFieldsInternal([newField], {
@@ -246,8 +250,13 @@ function createBaseForm(option = {}, mixins = []) {
         console.log(333, inputProps);
 
         // 这里开始处理表单验证的逻辑
+        // 在normalizeValidateRules中，触发时机被转换位以数组的结构存储
+        // rules则本身就是数组结构，每个元素是一个规则对象
         const validateRules = normalizeValidateRules(validate, rules, validateTrigger);
+
+        console.log('validateRules:', validateRules);
         const validateTriggers = getValidateTriggers(validateRules);
+        console.log('validateTriggers:', validateTriggers);
         validateTriggers.forEach((action) => {
           if (inputProps[action]) return;
           inputProps[action] = this.getCacheBind(name, action, this.onCollectValidate);
@@ -341,10 +350,11 @@ function createBaseForm(option = {}, mixins = []) {
         }
       },
 
-      // 这个函数到底是干嘛的。。。
-      // component存在的时候干一些事儿
-      // component不存在的时候干一些事儿。。。
-      // TODO该看这个函数了
+      // 在this.getCacheBind这个函数中调用了下面的函数
+      // this.getCacheBind函数中使用了bind创建了一个偏函数
+      // 偏函数的前两个参数都已确定，第一个是字段名name，第二个是action
+      // 下面这个函数不需要第二个参数action，以下划线作为占位符？
+      // 实际调用绑定后的偏函数时，只需传入一个component参数
       saveRef(name, _, component) {
         if (!component) {
           const fieldMeta = this.fieldsStore.getFieldMeta(name);
@@ -408,6 +418,7 @@ function createBaseForm(option = {}, mixins = []) {
         }
       },
 
+      // this.clearedFieldMetaCache这个对象存在的意义是什么？
       recoverClearedField(name) {
         if (this.clearedFieldMetaCache[name]) {
           this.fieldsStore.setFields({
@@ -418,6 +429,11 @@ function createBaseForm(option = {}, mixins = []) {
         }
       },
 
+      // 这个函数接受了很多的参数
+      // 但把相近类型的参数保存在了一个对象中
+      // 既能改善函数参数过多书写时的问题
+      // 在不传参数的时候也能更方便的通过解构的办法赋予默认值
+      // 在刚写的Transmitor类中可以修改为这样的
       validateFieldsInternal(fields, {
         fieldNames,
         action,
@@ -433,6 +449,7 @@ function createBaseForm(option = {}, mixins = []) {
             if (field.errors) {
               set(alreadyErrors, name, { errors: field.errors });
             }
+            // 遇到一个field.errors为true就整个退出？
             return;
           }
           const fieldMeta = this.fieldsStore.getFieldMeta(name);
@@ -447,7 +464,8 @@ function createBaseForm(option = {}, mixins = []) {
           allFields[name] = newField;
         });
         this.setFields(allFields);
-        // in case normalize
+        // in case normalize（源码中的注释）
+        // 不太明白这里为啥要重新赋值
         Object.keys(allValues).forEach((f) => {
           allValues[f] = this.fieldsStore.getFieldValue(f);
         });
@@ -456,6 +474,7 @@ function createBaseForm(option = {}, mixins = []) {
             this.fieldsStore.getFieldsValue(fieldNames));
           return;
         }
+        // TODO 2019-07-13 暂停在这里，看不明吧。。。
         const validator = new AsyncValidator(allRules);
         if (validateMessages) {
           validator.messages(validateMessages);
